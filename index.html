@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>葡萄酒风格 × 冠军酒杯（合并最终最终版·完整版）</title>
+ <style>
+  :root{
+    /* ChatGPT-ish light UI */
+    --bg:#f7f7f8;
+    --panel:#ffffff;
+    --panel2:#ffffff;
+    --text:#0f172a;      /* slate-900 */
+    --muted:#64748b;     /* slate-500 */
+    --line:#e5e7eb;      /* gray-200 */
+    --accent:#0ea5e9;    /* sky-500 */
+    --good:#16a34a;      /* green-600 */
+    --chip:#f3f4f6;      /* gray-100 */
+    --shadow: 0 10px 28px rgba(15, 23, 42, .08);
+  }
+
+  *{ box-sizing:border-box; }
+
+  body{
+    margin:0;
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  header{
+    padding: 28px 20px 16px;
+    max-width: 1240px;
+    margin: 0 auto;
+  }
+
+  h1{ margin:0 0 6px 0; font-size: 22px; letter-spacing: .2px; }
+  .sub{ color:var(--muted); font-size: 13px; line-height: 1.4; margin: 0 0 14px 0; }
+
+  .toolbar{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    align-items:center;
+    padding: 12px;
+    border:1px solid var(--line);
+    background: var(--panel);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+  }
+
+  .search{
+    display:flex;
+    gap:8px;
+    align-items:center;
+    background: var(--panel2);
+    border:1px solid var(--line);
+    border-radius: 12px;
+    padding: 10px 12px;
+    min-width: 280px;
+  }
+  .search input{
+    width: 260px;
+    max-width: 70vw;
+    border:0;
+    outline: none;
+    background: transparent;
+    color: var(--text);
+    font-size: 14px;
+  }
+
+  .chip{
+    background: var(--chip);
+    border:1px solid var(--line);
+    color: var(--text);
+    padding: 9px 10px;
+    border-radius: 999px;
+    font-size: 13px;
+    cursor:pointer;
+    user-select:none;
+  }
+  .chip input{ margin-right: 8px; vertical-align: -1px; }
+
+  button{
+    background: #ffffff;
+    border:1px solid var(--line);
+    color: var(--text);
+    padding: 10px 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    cursor:pointer;
+    box-shadow: 0 2px 8px rgba(15,23,42,.06);
+  }
+  button.secondary{
+    background: #ffffff;
+    border:1px solid var(--line);
+    box-shadow: none;
+  }
+
+  .wrap{
+    max-width:1240px;
+    margin: 0 auto;
+    padding: 0 20px 28px;
+  }
+
+  .card{
+    border:1px solid var(--line);
+    background: var(--panel);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    overflow:hidden;
+  }
+
+  table{
+    width:100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 13px;
+    line-height: 1.35;
+  }
+
+  thead th{
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    text-align:left;
+    padding: 12px 12px;
+    background: #fafafa;
+    border-bottom: 1px solid var(--line);
+    white-space: nowrap;
+  }
+
+  tbody td{
+    padding: 12px 12px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+
+  tbody tr:hover td{
+    background: rgba(14,165,233,.06);
+  }
+
+  th.num, td.num{ text-align:center; width: 90px; }
+  th.wide{ width: 360px; }
+  th.reason{ width: 520px; }
+
+  .muted{ color: var(--muted); }
+  .cup{ font-weight: 700; color: var(--accent); }
+  .stars{ letter-spacing: 1px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .winner{ color: var(--good); font-weight: 700; }
+
+  .foot{
+    color: var(--muted);
+    font-size: 12px;
+    padding: 10px 12px;
+    border-top: 1px solid var(--line);
+    background: #fafafa;
+  }
+
+  @media print{
+    body{ background:#fff; color:#111; }
+    header, .toolbar{ display:none !important; }
+    .wrap{ padding: 0; }
+    .card{ box-shadow:none; border:0; }
+    thead th{ position: static; background:#f5f5f5; color:#111; }
+    tbody tr:hover td{ background: transparent; }
+    .winner{ color:#0b7a2a; }
+    .cup{ color:#0b5aa6; }
+  }
+</style>
+
+</head>
+<body>
+  <header>
+    <h1>葡萄酒风格 × 冠军酒杯（合并最终最终版·完整版）</h1>
+    <p class="sub">
+      五杯对比：ZU / J3 / ZB / CRU / GGG。每行仅一个“⭐⭐⭐⭐”代表<strong>唯一冠军</strong>。<span class="muted">可搜索、可筛选冠军杯，打印可直接导出 PDF。</span>
+    </p>
+
+    <div class="toolbar">
+      <div class="search" title="输入产区/品种/关键词，例如：Napa、Priorat、Chardonnay、桶、矿物">
+        🔎 <input id="q" type="text" placeholder="搜索：Napa / Priorat / Chardonnay / 矿物 / 桶 / GSM …" />
+      </div>
+
+      <label class="chip" title="只显示冠军杯为 ZU 的行">
+        <input type="checkbox" id="fZU" /> 🏆 ZU
+      </label>
+      <label class="chip" title="只显示冠军杯为 J3 的行">
+        <input type="checkbox" id="fJ3" /> 🏆 J3
+      </label>
+      <label class="chip" title="只显示冠军杯为 ZB 的行">
+        <input type="checkbox" id="fZB" /> 🏆 ZB
+      </label>
+      <label class="chip" title="只显示冠军杯为 CRU 的行">
+        <input type="checkbox" id="fCRU" /> 🏆 CRU
+      </label>
+      <label class="chip" title="只显示冠军杯为 GGG 的行">
+        <input type="checkbox" id="fGGG" /> 🏆 GGG
+      </label>
+
+      <button id="clear" class="secondary">清除筛选</button>
+      <button id="print">Print / Save as PDF</button>
+      <span class="muted" id="count"></span>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="card">
+      <table id="t">
+        <thead>
+          <tr>
+            <th class="wide">葡萄酒风格/产区标签</th>
+            <th class="num">ZU</th>
+            <th class="num">J3</th>
+            <th class="num">ZB</th>
+            <th class="num">CRU</th>
+            <th class="num">GGG</th>
+            <th class="reason">🏆唯一冠军 &amp; 独一无二原因</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Rows (data) -->
+          <tr data-winner="J3">
+            <td><strong>Napa Cabernet（甜熟派/爆果/酒精高/新桶猛）</strong></td>
+            <td class="num stars">⭐⭐</td><td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">J3</span>：唯一能把<strong>酒精热感+甜熟果+新桶硬边</strong>揉圆，入口立刻顺、香气更炸</td>
+          </tr>
+
+          <tr data-winner="J3">
+            <td><strong>Amarone（高酒精/浓缩甜熟/干果巧克力）</strong></td>
+            <td class="num stars">⭐⭐</td><td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">J3</span>：唯一能把<strong>酒精热感+浓缩干果甜香</strong>揉圆，入口不辣不冲，香气更一体</td>
+          </tr>
+
+          <tr data-winner="ZB">
+            <td><strong>Cab 主导结构型（Bordeaux 左岸 / Washington / Margaret River / 结构型 Cab Blend）</strong></td>
+            <td class="num stars">⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">ZB</span>：唯一能把<strong>单宁骨架+力量稳住</strong>，结构线性、落点清晰</td>
+          </tr>
+
+          <tr data-winner="ZB">
+            <td><strong>Super Tuscan（托斯卡纳国际混酿：Cab/Merlot/Syrah，结构+新桶）</strong></td>
+            <td class="num stars">⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">ZB</span>：唯一能稳住<strong>新桶+结构重量</strong>，让单宁线性、落点清晰，不松不甜腻</td>
+          </tr>
+
+          <tr data-winner="CRU">
+            <td><strong>Bordeaux 右岸/成熟 Merlot Blend（Saint-Émilion/Pomerol 等）</strong></td>
+            <td class="num stars">⭐⭐⭐</td><td class="num stars">⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">CRU</span>：唯一能把<strong>成熟果+土壤+层次</strong>同屏展开，画面感最强</td>
+          </tr>
+
+          <tr data-winner="ZU">
+            <td><strong>Pinot Noir（细腻/冷凉/线条派：Burgundy 冷年、Martinborough 等）</strong></td>
+            <td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">ZU</span>：唯一能保住<strong>酸度精度+线条感</strong>，不把细节放散</td>
+          </tr>
+
+          <tr data-winner="CRU">
+            <td><strong>Pinot Noir（复杂/层次派：Burgundy 1er/GC、Oregon 层次型）</strong></td>
+            <td class="num stars">⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">CRU</span>：唯一能让<strong>花香/土壤/香料</strong>并行铺开，是“看懂”不是“放大”</td>
+          </tr>
+
+          <tr data-winner="J3">
+            <td><strong>Pinot Noir（浓郁/橡木/新世界：CA 浓郁、Central Otago 更饱满）</strong></td>
+            <td class="num stars">⭐⭐⭐</td><td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">J3</span>：唯一能做到<strong>香气爆发+入口变圆</strong>，桶味/硬边更融合</td>
+          </tr>
+
+          <tr data-winner="J3">
+            <td><strong>Nebbiolo（年轻/单宁强：年轻 Barolo/Barbaresco）</strong></td>
+            <td class="num stars">⭐⭐</td><td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">J3</span>：唯一能把<strong>单宁提前软化</strong>到“现在就好喝”</td>
+          </tr>
+
+          <tr data-winner="CRU">
+            <td><strong>Nebbiolo（成熟/陈年层次：想看全景复杂度）</strong></td>
+            <td class="num stars">⭐⭐</td><td class="num stars">⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">CRU</span>：玫瑰/焦油/草本/矿物<strong>同屏展开</strong>，层次最完整</td>
+          </tr>
+
+          <tr data-winner="ZU">
+            <td><strong>Sangiovese（年轻清爽：年轻 Chianti 等）</strong></td>
+            <td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">ZU</span>：清爽酸度最干净利落，“爽而不乱”</td>
+          </tr>
+
+          <tr data-winner="CRU">
+            <td><strong>Sangiovese（传统派：Chianti Classico/传统托斯卡纳）</strong></td>
+            <td class="num stars">⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">CRU</span>：酸+樱桃+草本+土壤<strong>完整画面</strong>，不磨圆不甜化</td>
+          </tr>
+
+          <tr data-winner="CRU">
+            <td><strong>Brunello di Montalcino（BDM：传统骨架+层次）</strong></td>
+            <td class="num stars">⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">CRU</span>：樱桃核/皮革土壤/酸度层次更立体，骨架仍清晰</td>
+          </tr>
+
+          <tr data-winner="J3">
+            <td><strong>Brunello/托斯卡纳现代派（重桶更浓、甜熟更讨喜）</strong></td>
+            <td class="num stars">⭐⭐</td><td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">J3</span>：桶味与酒精热感最能被揉圆，喝起来最顺</td>
+          </tr>
+
+          <tr data-winner="CRU">
+            <td><strong>Tempranillo 传统派（Rioja Reserva/Gran Reserva 等）</strong></td>
+            <td class="num stars">⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐⭐</td><td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">CRU</span>：红果+皮革+香料做成“画面”，陈年层次更分明</td>
+          </tr>
+
+          <tr data-winner="ZB">
+            <td><strong>Tempranillo 现代重桶/结构型（现代 Rioja、Ribera/Toro）</strong></td>
+            <td class="num stars">⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">ZB</span>：桶+结构重量必须由它稳住，不松不腻</td>
+          </tr>
+
+          <tr data-winner="ZB">
+            <td><strong>Priorat（Garnacha + Cariñena 主导；浓缩矿物/高酒精/高结构，常辅 Cab/Syrah/Merlot）</strong></td>
+            <td class="num stars">⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">ZB</span>：唯一能扛住<strong>浓缩度+矿物硬度+结构重量</strong>，单宁落点清晰，不松不糊不腻</td>
+          </tr>
+
+          <tr data-winner="CRU">
+            <td><strong>Syrah 冷凉优雅（北罗讷、Hawke’s Bay、Yarra/Victoria 冷凉）</strong></td>
+            <td class="num stars">⭐⭐</td><td class="num stars">⭐⭐⭐</td><td class="num stars">⭐⭐⭐</td><td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">CRU</span>：胡椒/花香/黑果<strong>分层展开</strong>且不过火</td>
+          </tr>
+
+          <tr data-winner="ZB">
+            <td><strong>Shiraz / 炎热厚重 Syrah（Barossa/McLaren Vale 等）</strong></td>
+            <td class="num stars">⭐⭐</td><td class="num stars">⭐⭐⭐</td><td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">ZB</span>：压住厚度与甜感，结构不塌不糊</td>
+          </tr>
+
+          <tr data-winner="CRU">
+            <td><strong>Grenache 优雅派（非爆果：优雅 Garnacha 等）</strong></td>
+            <td class="num stars">⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">CRU</span>：红果+草本+空气感整体画面最完整</td>
+          </tr>
+
+          <tr data-winner="J3">
+            <td><strong>Grenache 果酱/高酒精（爆果派）</strong></td>
+            <td class="num stars">⭐⭐</td><td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">J3</span>：把酒精热感与甜果融合得最圆润讨喜</td>
+          </tr>
+
+          <tr data-winner="CRU">
+            <td><strong>GSM 传统平衡（南罗讷/含 CDP 传统取向）</strong></td>
+            <td class="num stars">⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">CRU</span>：三种葡萄“同时存在”，复杂香料画面最完整</td>
+          </tr>
+
+          <tr data-winner="J3">
+            <td><strong>GSM 现代浓郁（高酒精/更讨喜）</strong></td>
+            <td class="num stars">⭐⭐</td><td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">J3</span>：浓郁 GSM 立刻变好喝，热感更融合</td>
+          </tr>
+
+          <tr data-winner="ZB">
+            <td><strong>GSM / Syrah 主导更结构（偏黑果更硬）</strong></td>
+            <td class="num stars">⭐⭐</td><td class="num stars">⭐⭐⭐</td><td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">ZB</span>：结构与落点必须清晰，最稳</td>
+          </tr>
+
+          <tr data-winner="ZU">
+            <td><strong>Chardonnay 冷凉矿物（Chablis、NZ 克制、清爽型）</strong></td>
+            <td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">ZU</span>：矿物+酸度的清晰度天花板</td>
+          </tr>
+
+          <tr data-winner="CRU">
+            <td><strong>Chardonnay 层次型高端（白勃艮第、Margaret River 高端 Chard）</strong></td>
+            <td class="num stars">⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">CRU</span>：果/桶/矿物同时展开，不互相压制</td>
+          </tr>
+
+          <tr data-winner="J3">
+            <td><strong>Chardonnay 重桶奶油（CA 重桶等）</strong></td>
+            <td class="num stars">⭐⭐</td><td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">J3</span>：桶味融合成圆润，口感最丝滑讨喜</td>
+          </tr>
+
+          <tr data-winner="J3">
+            <td><strong>Viognier（花香/丰腴/低酸：Condrieu 或新世界饱满型）</strong></td>
+            <td class="num stars">⭐⭐</td><td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">J3</span>：唯一能把<strong>白花/杏子香气+油润酒体</strong>放大并揉圆，让低酸白更立体讨喜</td>
+          </tr>
+
+          <tr data-winner="ZU">
+            <td><strong>Sauvignon Blanc（高香高酸：Marlborough + Loire；含大多数 California SB 非过桶）</strong></td>
+            <td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">ZU</span>：香气清晰度+酸度锁鲜最强</td>
+          </tr>
+
+          <tr data-winner="J3">
+            <td><strong>Sauvignon Blanc（桶/Sur lie/Fumé Blanc；含 California Fumé Blanc/过桶版）</strong></td>
+            <td class="num stars">⭐⭐⭐</td><td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">J3</span>：桶感/奶油感最融合，入口更顺</td>
+          </tr>
+
+          <tr data-winner="ZU">
+            <td><strong>Riesling / Grüner / 芳香白（干型、高酸矿物）</strong></td>
+            <td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">ZU</span>：高酸与香气的清晰度冠军，不钝不甜</td>
+          </tr>
+
+          <tr data-winner="ZU">
+            <td><strong>Chenin Blanc（Vouvray 干型：清晰酸度）</strong></td>
+            <td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">ZU</span>：酸度锁鲜+香气清晰度最佳</td>
+          </tr>
+
+          <tr data-winner="CRU">
+            <td><strong>Chenin Blanc（Savennières/复杂干白：蜡感矿物层次）</strong></td>
+            <td class="num stars">⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">CRU</span>：蜡感/矿物/层次铺开，细节最多</td>
+          </tr>
+
+          <tr data-winner="J3">
+            <td><strong>Chenin Blanc（南非更饱满/可能带桶）</strong></td>
+            <td class="num stars">⭐⭐⭐</td><td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">J3</span>：饱满果味与桶感更圆润讨喜</td>
+          </tr>
+
+          <tr data-winner="ZU">
+            <td><strong>轻红果&amp;通透草本（Loire Cab Franc、Mencía、Etna Rosso 等）</strong></td>
+            <td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">ZU</span>：通透度与线条最清楚，草本矿物不糊</td>
+          </tr>
+
+          <tr data-winner="ZU">
+            <td><strong>Beaujolais 普通清爽</strong></td>
+            <td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">ZU</span>：清爽红果与酸度线条最干净</td>
+          </tr>
+
+          <tr data-winner="CRU">
+            <td><strong>Cru Beaujolais（更复杂层次）</strong></td>
+            <td class="num stars">⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">CRU</span>：花香+红果+矿物“空气感画面”最完整</td>
+          </tr>
+
+          <tr data-winner="GGG">
+            <td><strong>Sparkling/香槟（无专用杯前提）</strong></td>
+            <td class="num stars">⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars winner">⭐⭐⭐⭐</td>
+            <td>🏆 <span class="cup">GGG</span>：通用杯里气泡更集中、入口更利落（仍不如专用香槟杯）</td>
+          </tr>
+
+          <tr data-winner="J3">
+            <td><strong>Port/加强酒（仅用现有杯应对）</strong></td>
+            <td class="num stars">⭐⭐</td><td class="num stars winner">⭐⭐⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐</td><td class="num stars">⭐⭐⭐</td>
+            <td>🏆 <span class="cup">J3</span>：酒精热感与甜香融合最圆润</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="foot">
+        小技巧：如果你只想看某个杯的“冠军场景”，勾选对应 🏆 筛选即可；导出 PDF 建议浏览器打印时选择“横向（Landscape）”，缩放到“一页宽”。
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const q = document.getElementById('q');
+    const filters = {
+      ZU: document.getElementById('fZU'),
+      J3: document.getElementById('fJ3'),
+      ZB: document.getElementById('fZB'),
+      CRU: document.getElementById('fCRU'),
+      GGG: document.getElementById('fGGG'),
+    };
+    const clearBtn = document.getElementById('clear');
+    const printBtn = document.getElementById('print');
+    const count = document.getElementById('count');
+    const rows = Array.from(document.querySelectorAll('#t tbody tr'));
+
+    function activeWinners(){
+      const act = Object.entries(filters).filter(([k,el])=>el.checked).map(([k])=>k);
+      return act;
+    }
+    function norm(s){ return (s||"").toLowerCase(); }
+
+    function apply(){
+      const term = norm(q.value.trim());
+      const act = activeWinners();
+      let shown = 0;
+
+      for(const r of rows){
+        const winner = r.getAttribute('data-winner');
+        const text = norm(r.innerText);
+        const matchTerm = term === "" || text.includes(term);
+        const matchWinner = act.length === 0 || act.includes(winner);
+
+        const show = matchTerm && matchWinner;
+        r.style.display = show ? "" : "none";
+        if(show) shown++;
+      }
+      count.textContent = `显示 ${shown} / ${rows.length}`;
+    }
+
+    q.addEventListener('input', apply);
+    Object.values(filters).forEach(el => el.addEventListener('change', apply));
+
+    clearBtn.addEventListener('click', ()=>{
+      q.value = "";
+      Object.values(filters).forEach(el => el.checked = false);
+      apply();
+    });
+
+    printBtn.addEventListener('click', ()=> window.print());
+
+    apply();
+  </script>
+</body>
+</html>
