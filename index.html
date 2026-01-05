@@ -167,6 +167,43 @@
     .winner{ color:#0b7a2a; }
     .cup{ color:#0b5aa6; }
   }
+   /* 手机适配 A：表格横向滑动 */
+.table-scroll{
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 保证矩阵不被挤烂：小屏用横滑解决 */
+.table-scroll table{
+  min-width: 980px;
+}
+
+/* 手机端整体更紧凑 */
+@media (max-width: 720px){
+  header{ padding: 18px 14px 10px; }
+  .wrap{ padding: 0 14px 18px; }
+
+  .toolbar{
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .search{
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+  .search input{
+    width: 100%;
+    max-width: 100%;
+  }
+
+  thead th, tbody td{
+    padding: 10px 10px;
+    font-size: 12px;
+  }
+
+  th.num, td.num{ width: 72px; }
+}
 </style>
 
 </head>
@@ -206,6 +243,10 @@
 
   <div class="wrap">
     <div class="card">
+      <div class="muted" style="padding:10px 12px; border-bottom:1px solid var(--line); background:#fafafa;">
+  手机端：表格可左右滑动查看全部列
+</div>
+      <div class="table-scroll" aria-label="表格可左右滑动">
       <table id="t">
         <thead>
           <tr>
@@ -455,6 +496,7 @@
           </tr>
         </tbody>
       </table>
+        </div>
       <div class="foot">
         小技巧：如果你只想看某个杯的“冠军场景”，勾选对应 🏆 筛选即可；导出 PDF 建议浏览器打印时选择“横向（Landscape）”，缩放到“一页宽”。
       </div>
